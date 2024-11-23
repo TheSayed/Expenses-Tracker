@@ -1,9 +1,17 @@
-export type Expense = {
+// types.ts
+export interface Expense {
+  id: string | number;
+  description: string;
+  amount: number;
+  date: Date;
+}
+
+export interface ExpenseItem {
   id: string;
   description: string;
   amount: number;
   date: Date;
-};
+}
 
 export type ExpensesData = Expense[];
 
@@ -12,19 +20,19 @@ const DUMMY_EXPENSES = [
     id: "e1",
     description: "Groceries",
     amount: 45.67,
-    date: new Date("2024-08-15"),
+    date: new Date("2024-11-15"),
   },
   {
     id: "e2",
     description: "Movie Tickets",
     amount: 24.99,
-    date: new Date("2024-08-10"),
+    date: new Date("2024-11-10"),
   },
   {
     id: "e3",
     description: "Gas",
     amount: 35.5,
-    date: new Date("2024-08-05"),
+    date: new Date("2024-11-13"),
   },
   {
     id: "e4",

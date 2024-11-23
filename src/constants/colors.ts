@@ -31,7 +31,7 @@ const color = {
 
   // 7. Status Colors
   successColor: "#48BB78", // Green for positive financial status
-  warningColor: "#ECC94B", // Yellow for caution or approaching limits
+  warningColor: "#FFFF00", // Yellow for caution or approaching limits
   dangerColor: "#E53E3E", // Red for overspending or critical alerts
 };
 

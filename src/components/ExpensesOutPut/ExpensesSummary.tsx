@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { ExpensesData } from "../../data/DUMMY_EXPENSES";
+import { Expense, ExpensesData } from "../../data/DUMMY_EXPENSES";
 
 type ExpenseSummaryProps = {
-  expenses: ExpensesData;
+  expenses: Expense[];
   periodName: string;
 };
 

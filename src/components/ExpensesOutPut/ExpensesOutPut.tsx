@@ -1,28 +1,47 @@
-import { View, Text, StyleSheet } from "react-native";
+// ExpensesOutPut.tsx
 import React from "react";
-import ExpensesList from "./ExpensesList";
-import ExpensesSummary from "./ExpensesSummary";
-import DUMMY_EXPENSES from "../../data/DUMMY_EXPENSES";
-import color from "../../constants/colors";
+import { View, StyleSheet, Text } from "react-native";
 
-type ExpensesOutPutProp = {
-  expenses?: object[];
+import ExpensesSummary from "./ExpensesSummary";
+import ExpensesList from "./ExpensesList";
+import { Expense } from "../../data/DUMMY_EXPENSES";
+
+interface ExpensesOutPutProp {
+  expenses: Expense[];
   periodName: string;
-};
-const ExpensesOutPut = ({ expenses, periodName }: ExpensesOutPutProp) => {
+  fallbackText: string;
+}
+
+const ExpensesOutPut: React.FC<ExpensesOutPutProp> = ({
+  expenses = [],
+  periodName,
+  fallbackText,
+}) => {
+  let content = <Text style={styles.infoText}>{fallbackText}</Text>;
+
+  if (expenses.length > 0) {
+    content = <ExpensesList expenses={expenses} />;
+  }
   return (
     <View style={styles.container}>
-      <ExpensesSummary expenses={DUMMY_EXPENSES} periodName={periodName} />
-      <ExpensesList expenses={DUMMY_EXPENSES} />
+      <ExpensesSummary expenses={expenses} periodName={periodName} />
+      {content}
     </View>
   );
 };
 
-export default ExpensesOutPut;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.primaryBackground, // Use a more visible color
+    backgroundColor: "#fff",
+  },
+  infoText: {
+    marginTop: 120,
+    justifyContent: "center",
+    fontSize: 16,
+    textAlign: "center",
+    color: "gray",
   },
 });
+
+export default ExpensesOutPut;
