@@ -7,7 +7,7 @@ import { selectExpenses } from "../../redux/expenseSlice";
 
 const AllExpenses = () => {
   const expenses = useAppSelector(selectExpenses);
-  console.log(expenses);
+
   return (
     <View style={styles.container}>
       <ExpensesOutPut
