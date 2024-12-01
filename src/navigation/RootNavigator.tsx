@@ -2,7 +2,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import BottomTabsNavigator from "./BottomTabsNavigator";
 import ManageExpenses from "../screens/ManageExpenses/ManageExpenses";
-import color from "../constants/colors";
+import Colors from "../constants/Colors";
 
 export type RootStackParamList = {
   ExpensesOverView: undefined;
@@ -15,23 +15,23 @@ const RootNavigator: React.FC = () => {
     <Stack.Navigator
       screenOptions={() => ({
         headerStyle: {
-          backgroundColor: color.secondaryBackground, // Fresh Green for the header background
+          backgroundColor: Colors.secondaryBackground, // Fresh Green for the header background
         },
-        headerTintColor: color.interactiveText, // Dark Gray for the header text/icons
+        headerTintColor: Colors.interactiveText, // Dark Gray for the header text/icons
         headerTitleStyle: {
           fontWeight: "bold",
-          color: color.warningColor, // Light Blue-Gray for the header title color
+          color: Colors.warningColor, // Light Blue-Gray for the header title color
         },
         tabBarStyle: {
-          backgroundColor: color.secondaryBackground, // Fresh Green for the tab bar background
-          borderTopColor: color.warningColor, // Light Green for the tab bar border
+          backgroundColor: Colors.secondaryBackground, // Fresh Green for the tab bar background
+          borderTopColor: Colors.warningColor, // Light Green for the tab bar border
         },
-        tabBarActiveTintColor: color.warningColor, // Vivid Blue for the active tab icon/text
+        tabBarActiveTintColor: Colors.warningColor, // Vivid Blue for the active tab icon/text
         tabBarInactiveTintColor: "white",
-        tintColor: color.warningColor,
+        tintColor: Colors.warningColor,
         headerBackTitle: "Back",
         headerBackTitleStyle: {
-          color: color.warningColor,
+          color: Colors.warningColor,
           fontSize: 16,
         },
         headerBackTitleVisible: true,

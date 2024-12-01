@@ -1,19 +1,23 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
-import color from "../constants/colors";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import Colors from "../../constants/Colors";
+
+type RootStackParamList = {
+  ManageExpenses: undefined;
+};
 
 const AppIcon = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleNavigationToExpensesManagement = () => {
-    navigation.navigate<NavigationProp>("ManageExpenses");
+    navigation.navigate("ManageExpenses");
   };
   return (
     <TouchableOpacity onPress={handleNavigationToExpensesManagement}>
       <View style={styles.container}>
-        <Ionicons name="add" size={30} color={color.warningColor} />
+        <Ionicons name="add" size={30} color={Colors.warningColor} />
       </View>
     </TouchableOpacity>
   );

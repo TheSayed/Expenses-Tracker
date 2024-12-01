@@ -1,10 +1,11 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { ExpenseItem } from "../../../data/DUMMY_EXPENSES";
-import AppInput from "../../../components/AppInput";
-import AppButton from "../../../UI/AppButton";
+import { ExpenseItem } from "../../../types/types.dto.";
+import AppInput from "../../../components/AppInput/AppInput";
+
 import useExpenseFormHook from "./hooks/useExpenseFormHook";
 import styles from "./ExpensesForm.styles";
+import AppButton from "../../../components/AppButton/AppButton";
 
 interface ExpensesFormProps {
   onCancel: () => void;
@@ -19,7 +20,6 @@ const ExpensesForm = ({
   submitButtonLabel,
   defaultValues = {},
 }: ExpensesFormProps) => {
-  // Initialize with default values
   const {
     inputChangeHandler,
     submitHandler,

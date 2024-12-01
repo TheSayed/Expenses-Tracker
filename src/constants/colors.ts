@@ -1,4 +1,4 @@
-const color = {
+const Colors = {
   // 1. Background Colors
   primaryBackground: "#63B3ED", // Very Light Blue-Gray for main background
   secondaryBackground: "#48BB78", // Fresh Green for sections like headers or content blocks
@@ -35,4 +35,4 @@ const color = {
   dangerColor: "#E53E3E", // Red for overspending or critical alerts
 };
 
-export default color;
+export default Colors;

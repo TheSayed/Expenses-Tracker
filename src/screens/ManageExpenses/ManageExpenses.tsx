@@ -6,6 +6,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import styles from "./ManageExpenses.styles";
 import ExpensesForm from "./components/ExpensesForm";
 import useManageExpensesHook from "./hooks/useManageExpensesHook";
+import LoadingOutlay from "../../components/LoadingOutLay/LoadingOutlay";
 type ManageExpensesProps = NativeStackScreenProps<
   RootStackParamList,
   "ManageExpenses"
@@ -13,19 +14,22 @@ type ManageExpensesProps = NativeStackScreenProps<
 const ManageExpenses = ({ route, navigation }: ManageExpensesProps) => {
   const {
     isEditing,
-    choosenExpenses,
+    chosenExpenses,
     deleteExpenseHandler,
     cancelHandler,
     confirmHandler,
+    isLoading,
   } = useManageExpensesHook(route, navigation);
-
-  return (
+  console.log("isLoading", isLoading);
+  return isLoading ? (
+    <LoadingOutlay />
+  ) : (
     <View style={styles.container}>
       <ExpensesForm
         onCancel={cancelHandler}
         onSubmit={confirmHandler}
         submitButtonLabel={isEditing ? "Update" : "Add"}
-        defaultValues={choosenExpenses}
+        defaultValues={chosenExpenses}
       />
 
       {isEditing && (

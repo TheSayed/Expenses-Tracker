@@ -4,15 +4,10 @@ import Colors from "../../constants/Colors";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
     padding: 24,
     backgroundColor: Colors.primaryBackground,
-  },
-  deleteContainer: {
-    marginTop: 16,
-    paddingTop: 8,
-    borderTopWidth: 2,
-    borderTopColor: Colors.warningColor,
-    alignItems: "center",
   },
 });
 

@@ -1,7 +1,8 @@
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import React from "react";
-import ExpensesItem from "./ExpensesItem";
-import { ExpensesData } from "../../data/DUMMY_EXPENSES";
+import { ExpensesData } from "../../../types/types.dto.";
+import styles from "./ExpensesList.styles";
+import ExpensesItem from "../ExpensesItem/ExpensesItem";
 
 type ExpensesListProp = {
   expenses: ExpensesData;
@@ -11,14 +12,14 @@ const ExpensesList = ({ expenses }: ExpensesListProp) => {
     <View style={styles.container}>
       <FlatList
         data={expenses}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => {
           return (
             <ExpensesItem
               amount={item.amount}
               description={item.description}
               date={item.date}
-              id={item.id}
+              id={item.id.toString()}
             />
           );
         }}
@@ -29,10 +30,3 @@ const ExpensesList = ({ expenses }: ExpensesListProp) => {
 };
 
 export default ExpensesList;
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 16,
-    paddingVertical: 40,
-  },
-});

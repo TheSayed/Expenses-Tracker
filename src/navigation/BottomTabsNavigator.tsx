@@ -3,8 +3,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import RecentExpenses from "../screens/RecentExpenses/RecentExpenses";
 import AllExpenses from "../screens/AllExpenses/AllExpenses";
-import color from "../constants/colors";
-import AppIcon from "../components/AppIcon";
+import Colors from "../constants/Colors";
+import AppIcon from "../components/AppIcon/AppIcon";
 
 type BottomTabsParamList = {
   RecentExpenses: undefined;
@@ -19,20 +19,20 @@ const BottomTabsNavigator: React.FC = () => {
       initialRouteName="RecentExpenses"
       screenOptions={({ navigation }) => ({
         headerStyle: {
-          backgroundColor: color.secondaryBackground, // Fresh Green for the header background
+          backgroundColor: Colors.secondaryBackground, // Fresh Green for the header background
         },
-        headerTintColor: color.primaryFontColor, // Dark Gray for the header text/icons
+        headerTintColor: Colors.primaryFontColor, // Dark Gray for the header text/icons
         headerTitleStyle: {
           fontWeight: "bold",
-          color: color.warningColor, // Light Blue-Gray for the header title color
+          color: Colors.warningColor, // Light Blue-Gray for the header title color
         },
         tabBarStyle: {
-          backgroundColor: color.secondaryBackground, // Fresh Green for the tab bar background
-          borderTopColor: color.warningColor, // Light Green for the tab bar border
+          backgroundColor: Colors.secondaryBackground, // Fresh Green for the tab bar background
+          borderTopColor: Colors.warningColor, // Light Green for the tab bar border
         },
-        tabBarActiveTintColor: color.warningColor, // Vivid Blue for the active tab icon/text
+        tabBarActiveTintColor: Colors.warningColor, // Vivid Blue for the active tab icon/text
         tabBarInactiveTintColor: "white",
-        tintColor: color.warningColor, // Vivid Green for the active tab
+        tintColor: Colors.warningColor, // Vivid Green for the active tab
         headerRight() {
           return <AppIcon />;
         },
