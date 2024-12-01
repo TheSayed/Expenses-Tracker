@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a React Native application using Expo. It provides a template for getting started with React Native development using Expo to build an Expenses Tracker App.
+This project is a React Native application using Expo to build an Expenses Tracker App which helps in managing user expenses
 
 ## Prerequisites
 
@@ -18,14 +18,15 @@ Make sure you have the following installed:
 
 Make sure you're in the project directory, then install the required node modules by running:
 
-````bash
+```bash
 yarn install
+```
 
 If you prefer using npm, you can use:
 
 ```bash
 npm install
-````
+```
 
 ## Run The App
 
@@ -50,20 +51,6 @@ For Expo Go to connect successfully, your development server (the machine runnin
 ## Troubleshooting
 
 If the app does not load, ensure that your device and development server are on the same network. Check the terminal for any error messages that might provide more information on issues you encounter.
-
-## Running Tests
-
-To run the tests with Jest, use the following command:
-
-```bash
-yarn test
-```
-
-Or, if you prefer npm:
-
-```bash
-npm test
-```
 
 ## Project Details
 
