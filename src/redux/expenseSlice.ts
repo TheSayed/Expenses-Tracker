@@ -2,12 +2,13 @@ import { createSlice, nanoid } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import moment from "moment";
+import { createSelector } from "reselect";
 
 type ExpenseItem = {
   id: string;
   description: string;
   amount: number;
-  date: Date;
+  date: string;
 };
 
 type ExpenseState = {
@@ -19,6 +20,14 @@ const initialState: ExpenseState = {
   expenses: [],
 };
 
+// Utility function to convert date to ISO string
+const toISOString = (date: string | Date): string => {
+  if (typeof date === "string") {
+    return new Date(date).toISOString();
+  }
+  return date.toISOString();
+};
+
 export const expenseSlice = createSlice({
   name: "expense",
   initialState,
@@ -26,14 +35,17 @@ export const expenseSlice = createSlice({
     addExpense: (
       state,
       action: PayloadAction<{
+        id?: string;
         description: string;
         amount: number;
-        date: Date;
+        date: string | Date;
       }>
     ) => {
       const newExpenseItem: ExpenseItem = {
-        id: nanoid(),
-        ...action.payload,
+        id: action.payload.id || nanoid(), // Use provided ID or generate new one
+        description: action.payload.description,
+        amount: action.payload.amount,
+        date: toISOString(action.payload.date),
       };
       state.expenses.push(newExpenseItem);
     },
@@ -47,20 +59,33 @@ export const expenseSlice = createSlice({
     },
     updateExpense: (
       state,
-      action: PayloadAction<{ id: string; changes: Partial<ExpenseItem> }>
+      action: PayloadAction<{
+        id: string;
+        changes: Partial<Omit<ExpenseItem, "id">>;
+      }>
     ) => {
       const idx = state.expenses.findIndex(
         (item) => item.id === action.payload.id
       );
       if (idx !== -1) {
+        const updatedChanges = action.payload.changes.date
+          ? {
+              ...action.payload.changes,
+              date: toISOString(action.payload.changes.date),
+            }
+          : action.payload.changes;
+
         state.expenses[idx] = {
           ...state.expenses[idx],
-          ...action.payload.changes,
+          ...updatedChanges,
         };
       }
     },
     setExpenses: (state, action: PayloadAction<ExpenseItem[]>) => {
-      state.expenses = action.payload;
+      state.expenses = action.payload.map((expense) => ({
+        ...expense,
+        date: toISOString(expense.date),
+      }));
     },
   },
 });
@@ -68,10 +93,14 @@ export const expenseSlice = createSlice({
 export const { addExpense, deleteExpense, updateExpense, setExpenses } =
   expenseSlice.actions;
 
-export const selectExpenses = (state: RootState) =>
-  state.expense.expenses
+const selectExpenseState = (state: RootState) => state.expense.expenses;
+
+export const selectExpenses = createSelector([selectExpenseState], (expenses) =>
+  expenses
     .slice()
-    .sort((a, b) => moment(b.date).valueOf() - moment(a.date).valueOf());
+    .sort((a, b) => moment(b.date).valueOf() - moment(a.date).valueOf())
+);
+
 export const selectExpenseById = (state: RootState, id: string) =>
   state.expense.expenses.find((expense) => expense.id === id);
 

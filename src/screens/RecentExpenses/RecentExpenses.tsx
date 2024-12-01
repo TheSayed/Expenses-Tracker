@@ -22,7 +22,7 @@ const RecentExpenses = () => {
   const recentExpenses =
     expenses?.filter((expense) => {
       const currentDate = new Date();
-      const date7DaysAgo = getDateMinusDays(currentDate, 7);
+      const date7DaysAgo = getDateMinusDays(currentDate.toISOString(), 7);
       return new Date(expense.date) >= date7DaysAgo;
     }) || [];
 

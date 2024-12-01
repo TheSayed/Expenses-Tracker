@@ -1,11 +1,13 @@
 import React from "react";
 import { View, Text } from "react-native";
+import { Controller } from "react-hook-form";
 import { ExpenseItem } from "../../../types/types.dto.";
 import AppInput from "../../../components/AppInput/AppInput";
-
-import useExpenseFormHook from "./hooks/useExpenseFormHook";
-import styles from "./ExpensesForm.styles";
 import AppButton from "../../../components/AppButton/AppButton";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
+import useExpenseForm from "./hooks/useExpenseFormHook";
+import styles from "./ExpensesForm.styles";
+import Colors from "../../../constants/Colors";
 
 interface ExpensesFormProps {
   onCancel: () => void;
@@ -14,76 +16,123 @@ interface ExpensesFormProps {
   defaultValues?: Partial<ExpenseItem>;
 }
 
-const ExpensesForm = ({
+const ExpensesForm: React.FC<ExpensesFormProps> = ({
   onCancel,
   onSubmit,
   submitButtonLabel,
-  defaultValues = {},
-}: ExpensesFormProps) => {
-  const {
-    inputChangeHandler,
-    submitHandler,
-    amount,
-    date,
-    description,
-    validationErrors,
-  } = useExpenseFormHook({ defaultValues, onSubmit });
+  defaultValues,
+}) => {
+  const { control, errors, submitHandler, inputChangeHandler } = useExpenseForm(
+    { defaultValues, onSubmit }
+  );
 
+  console.log(defaultValues, "defaultValues");
   return (
     <View style={styles.form}>
-      <Text style={styles.title}>ADD YOUR EXPENSE</Text>
+      <Text style={styles.title}>{submitButtonLabel} Your Expense</Text>
+
       <View style={styles.rowForm}>
-        <AppInput
-          style={styles.rowInput}
-          label="Amount"
-          textInputConfig={{
-            keyboardType: "decimal-pad",
-            onChangeText: inputChangeHandler.bind(this, "amount"),
-            value: amount,
-            defaultValue: defaultValues?.amount?.toString(),
+        <Controller
+          control={control}
+          name="amount"
+          rules={{
+            required: "Amount is required",
+            validate: (value) => {
+              const parsedAmount = parseFloat(value?.toString() || "0");
+              return (
+                (!isNaN(parsedAmount) && parsedAmount > 0) || "Invalid amount"
+              );
+            },
           }}
+          render={({ field: { onChange, value } }) => (
+            <AppInput
+              style={styles.rowInput}
+              label="Amount"
+              textInputConfig={{
+                keyboardType: "decimal-pad",
+                onChangeText: (text) => {
+                  onChange(text);
+                  inputChangeHandler("amount");
+                },
+                value: value?.toString(),
+              }}
+            />
+          )}
         />
-        <AppInput
-          style={styles.rowInput}
-          label="Date"
-          textInputConfig={{
-            placeholder: "YYYY-MM-DD",
-            maxLength: 10,
-            onChangeText: inputChangeHandler.bind(this, "date"),
-            value: date,
-            defaultValue:
-              defaultValues?.date instanceof Date
-                ? defaultValues.date.toISOString().split("T")[0]
-                : "",
-          }}
+
+        <Controller
+          control={control}
+          name="date"
+          rules={{ required: "Date is required" }}
+          render={({ field: { onChange, value } }) => (
+            <>
+              <View style={styles.dateInput}>
+                <RNDateTimePicker
+                  value={value ? new Date(value) : new Date()}
+                  onChange={(event, selectedDate) => {
+                    onChange(selectedDate);
+                    inputChangeHandler("date");
+                  }}
+                  display="calendar"
+                  style={{
+                    width: "100%",
+                    marginEnd: "40%",
+                    display: "flex",
+                  }}
+                  maximumDate={new Date()}
+                  collapsable={true}
+                />
+              </View>
+            </>
+          )}
         />
       </View>
-      <AppInput
-        label="Description"
-        textInputConfig={{
-          multiline: true,
-          autoCapitalize: "sentences",
-          onChangeText: inputChangeHandler.bind(this, "description"),
-          value: description,
-          defaultValue: defaultValues?.description,
+
+      <Controller
+        control={control}
+        name="description"
+        rules={{
+          required: "Description is required",
+          validate: (value) =>
+            value?.toString().trim() !== "" || "Description cannot be empty",
         }}
+        render={({ field: { onChange, value } }) => (
+          <AppInput
+            label="Description"
+            textInputConfig={{
+              multiline: true,
+              autoCapitalize: "sentences",
+              onChangeText: (text) => {
+                onChange(text);
+                inputChangeHandler("description");
+              },
+              value: value?.toString(),
+            }}
+          />
+        )}
       />
-      {validationErrors.length > 0 && (
+
+      {(errors.amount || errors.date || errors.description) && (
         <View style={styles.errorContainer}>
-          {validationErrors.map((error, index) => (
-            <Text key={index} style={styles.errorText}>
-              {error}
-            </Text>
-          ))}
+          {errors.amount && (
+            <Text style={styles.errorText}>{errors.amount.message}</Text>
+          )}
+          {errors.date && (
+            <Text style={styles.errorText}>{errors.date.message}</Text>
+          )}
+          {errors.description && (
+            <Text style={styles.errorText}>{errors.description.message}</Text>
+          )}
         </View>
       )}
+
       <View style={styles.buttonsContainer}>
         <AppButton
-          text={submitButtonLabel}
           disabled={false}
+          text={submitButtonLabel}
           onPress={submitHandler}
         />
-        <AppButton text="Cancel" disabled={false} onPress={onCancel} />
+        <AppButton disabled={true} text="Cancel" onPress={onCancel} />
       </View>
     </View>
   );

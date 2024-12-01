@@ -1,48 +1,49 @@
-import { View, Text } from "react-native";
-import React, { useEffect, useState } from "react";
-import { ExpenseItem } from "../../../../data/DUMMY_EXPENSES";
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { ExpenseItem } from "../../../../types/types.dto.";
 
-interface ExpenseFormHookProps {
-  defaultValues: Partial<ExpenseItem>;
+interface UseExpenseFormProps {
+  defaultValues?: Partial<ExpenseItem>;
   onSubmit: (expenseData: Partial<ExpenseItem>) => void;
 }
 
-const useExpenseFormHook = ({
-  defaultValues,
+const useExpenseForm = ({
+  defaultValues = {},
   onSubmit,
-}: ExpenseFormHookProps) => {
-  const [enteredValue, setEnteredValue] = useState({
-    amount: defaultValues?.amount?.toString() || "",
-    date:
-      defaultValues?.date instanceof Date
-        ? defaultValues.date.toISOString().split("T")[0]
-        : "",
-    description: defaultValues?.description || "",
+}: UseExpenseFormProps) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+  } = useForm<Partial<ExpenseItem>>({
+    defaultValues: {
+      amount: defaultValues.amount !== undefined ? defaultValues.amount : 0,
+      date: defaultValues.date
+        ? new Date(defaultValues.date).toISOString().split("T")[0]
+        : new Date().toISOString().split("T")[0],
+      description: defaultValues.description || "",
+    },
   });
 
-  const [validationErrors, setValidationErrors] = useState<string[]>([]);
-
+  // Track which fields have been modified
   const [modifiedFields, setModifiedFields] = useState({
     amount: false,
     date: false,
     description: false,
   });
 
-  const { amount, date, description } = enteredValue;
-
-  // Only update values if defaultValues changes after initial render
+  // Reset form and modification tracking when default values change
   useEffect(() => {
     if (defaultValues && Object.keys(defaultValues).length > 0) {
-      const newValues = {
-        amount: defaultValues.amount?.toString() || "",
-        date:
-          defaultValues.date instanceof Date
-            ? defaultValues.date.toISOString().split("T")[0]
-            : "",
+      reset({
+        amount: defaultValues.amount !== undefined ? defaultValues.amount : 0,
+        date: defaultValues.date
+          ? new Date(defaultValues.date).toISOString().split("T")[0]
+          : new Date().toISOString().split("T")[0],
         description: defaultValues.description || "",
-      };
-
-      setEnteredValue(newValues);
+      });
 
       setModifiedFields({
         amount: false,
@@ -50,28 +51,18 @@ const useExpenseFormHook = ({
         description: false,
       });
     }
-  }, [defaultValues]);
+  }, [defaultValues, reset]);
 
-  const inputChangeHandler = (identifier: string, enteredValue: string) => {
-    console.log(`Input changed - ${identifier}:`, enteredValue); // Debug log
-    setEnteredValue((prevValues) => ({
-      ...prevValues,
-      [identifier]: enteredValue,
-    }));
-    setModifiedFields((prev) => ({
-      ...prev,
-      [identifier]: true,
-    }));
-  };
-
-  const submitHandler = () => {
+  // Custom submit handler with additional validation logic
+  const submitHandler = handleSubmit((data) => {
     const expenseData: Partial<ExpenseItem> = {};
     const errors: string[] = [];
 
+    // Amount validation
     if (!modifiedFields.amount && defaultValues.amount) {
       expenseData.amount = defaultValues.amount;
-    } else if (amount) {
-      const parsedAmount = parseFloat(amount);
+    } else if (data.amount) {
+      const parsedAmount = parseFloat(data.amount.toString());
       if (!isNaN(parsedAmount) && parsedAmount > 0) {
         expenseData.amount = parsedAmount;
       } else {
@@ -81,12 +72,13 @@ const useExpenseFormHook = ({
       errors.push("Please enter a valid amount.");
     }
 
+    // Date validation
     if (!modifiedFields.date && defaultValues.date) {
       expenseData.date = defaultValues.date;
-    } else if (date) {
-      const parsedDate = new Date(date);
+    } else if (data.date) {
+      const parsedDate = new Date(data.date);
       if (!isNaN(parsedDate.getTime())) {
-        expenseData.date = parsedDate;
+        expenseData.date = parsedDate.toISOString().split("T")[0];
       } else {
         errors.push("Please enter a valid date.");
       }
@@ -94,33 +86,41 @@ const useExpenseFormHook = ({
       errors.push("Please enter a valid date.");
     }
 
+    // Description validation
     if (!modifiedFields.description && defaultValues.description) {
       expenseData.description = defaultValues.description;
-    } else if (description) {
-      expenseData.description = description.trim();
-      if (!expenseData.description) {
+    } else if (data.description) {
+      const trimmedDescription = data.description.toString().trim();
+      if (trimmedDescription) {
+        expenseData.description = trimmedDescription;
+      } else {
         errors.push("Please enter a description.");
       }
     } else {
       errors.push("Please enter a description.");
     }
 
-    if (errors.length > 0) {
-      setValidationErrors(errors);
-      return;
+    // If no errors, submit; otherwise, handle errors
+    if (errors.length === 0) {
+      onSubmit(expenseData);
     }
+  });
 
-    setValidationErrors([]);
-    onSubmit(expenseData);
+  // Track field modifications
+  const inputChangeHandler = (identifier: string) => {
+    setModifiedFields((prev) => ({
+      ...prev,
+      [identifier]: true,
+    }));
   };
+
   return {
-    inputChangeHandler,
+    control,
+    errors,
     submitHandler,
-    amount,
-    date,
-    description,
-    validationErrors,
+    inputChangeHandler,
+    setValue,
   };
 };
 
-export default useExpenseFormHook;
+export default useExpenseForm;

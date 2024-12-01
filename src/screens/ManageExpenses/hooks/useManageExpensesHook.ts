@@ -21,9 +21,7 @@ const useManageExpensesHook = (route: any, navigation: any) => {
   const isEditing = !!expensesId;
   const expenses = useAppSelector(selectExpenses);
   const [createExpense] = useCreateExpenseItemMutation();
-
   const [updateExpenseItem] = useUpdateExpenseItemMutation();
-
   const chosenExpenses = expenses.find((item) => item.id === expensesId);
 
   const deleteExpenseHandler = async () => {
@@ -51,16 +49,50 @@ const useManageExpensesHook = (route: any, navigation: any) => {
   const confirmHandler = async (expenseData: Partial<ExpenseItem>) => {
     setIsLoading(true);
     try {
-      if (isEditing) {
-        if (typeof expensesId === "string") {
-          console.log("updateExpense", expensesId, expenseData);
-          dispatch(updateExpense({ id: expensesId, changes: expenseData }));
+      const sanitizeDate = (date: string | Date | undefined): string => {
+        if (date instanceof Date) {
+          return date.toISOString();
         }
-        console.log("updateExpenseItem", expensesId, expenseData);
-        await updateExpenseItem({ id: expensesId, data: expenseData }).unwrap();
+        if (typeof date === "string") {
+          return new Date(date).toISOString();
+        }
+        return new Date().toISOString(); // Fallback to current date
+      };
+
+      if (isEditing) {
+        if (expensesId) {
+          dispatch(
+            updateExpense({
+              id: expensesId,
+              changes: {
+                ...expenseData,
+                date: sanitizeDate(expenseData.date),
+              },
+            })
+          );
+        }
+        await updateExpenseItem({
+          id: expensesId,
+          data: {
+            ...expenseData,
+            date: sanitizeDate(expenseData.date),
+          },
+        }).unwrap();
       } else {
-        await createExpense(expenseData as ExpenseItem).unwrap();
-        dispatch(addExpense(expenseData as ExpenseItem));
+        const createdExpense = await createExpense({
+          description: expenseData.description!,
+          amount: expenseData.amount!,
+          date: sanitizeDate(expenseData.date),
+        }).unwrap();
+
+        dispatch(
+          addExpense({
+            id: createdExpense?.name!,
+            description: expenseData.description!,
+            amount: expenseData.amount!,
+            date: sanitizeDate(expenseData.date),
+          })
+        );
       }
     } catch (error) {
       console.error("Error handling expense:", error);

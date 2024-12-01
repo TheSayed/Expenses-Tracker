@@ -16,7 +16,8 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "root", // Key to store data in storage
   storage: AsyncStorage,
-  whitelist: ["expense"], // Only persist `expenseReducer` (RTK Query cache is not persisted by default)
+  whitelist: ["expense"],
+  blacklist: ["postItemApi"], // Only persist `expenseReducer` (RTK Query cache is not persisted by default)
 };
 
 // Persisted reducer
@@ -28,7 +29,12 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+        ignoredActions: [
+          "persist/PERSIST",
+          "persist/REHYDRATE",
+          "postItemApi/mutations/removeMutationResult",
+        ],
+        ignoredPaths: ["expense.expenses.0.date"],
       },
     }).concat(postItemApi.middleware),
 });

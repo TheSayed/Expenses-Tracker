@@ -28,6 +28,8 @@ If you prefer using npm, you can use:
 npm install
 ```
 
+[Watch the video](path-to-your-video.mp4)
+
 ## Run The App
 
 **Start the development server:**
@@ -60,6 +62,7 @@ If the app does not load, ensure that your device and development server are on 
 
 **Features:**
 
+- Uses Firebase as backend.
 - Uses Redux for state management.
 - Uses TypeScript for type safety.
 - Implements dynamic routes for managing expenses.

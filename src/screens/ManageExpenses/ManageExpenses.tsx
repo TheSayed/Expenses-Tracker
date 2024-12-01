@@ -20,7 +20,7 @@ const ManageExpenses = ({ route, navigation }: ManageExpensesProps) => {
     confirmHandler,
     isLoading,
   } = useManageExpensesHook(route, navigation);
-  console.log("isLoading", isLoading);
+  console.log("ManageExpenses", chosenExpenses);
   return isLoading ? (
     <LoadingOutlay />
   ) : (

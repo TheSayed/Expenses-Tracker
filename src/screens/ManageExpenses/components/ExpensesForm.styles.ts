@@ -9,6 +9,8 @@ export default StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 20,
+    color: "white",
+    textAlign: "center",
   },
   rowForm: {
     flexDirection: "row",
@@ -17,6 +19,16 @@ export default StyleSheet.create({
   },
   rowInput: {
     flex: 1,
+  },
+  dateInput: {
+    flex: 1,
+    backgroundColor: "white",
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 30,
+    textAlign: "center",
+    borderRadius: 8,
   },
   buttonsContainer: {
     flexDirection: "row",

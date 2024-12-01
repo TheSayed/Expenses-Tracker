@@ -12,14 +12,14 @@ const ExpensesList = ({ expenses }: ExpensesListProp) => {
     <View style={styles.container}>
       <FlatList
         data={expenses}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id + ""}
         renderItem={({ item }) => {
           return (
             <ExpensesItem
               amount={item.amount}
               description={item.description}
               date={item.date}
-              id={item.id.toString()}
+              id={item.id + ""}
             />
           );
         }}

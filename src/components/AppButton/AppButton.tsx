@@ -10,8 +10,10 @@ type ButtonProps = {
 
 const AppButton = ({ text, onPress, disabled }: ButtonProps) => {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View style={[styles.button, disabled && styles.fade]}>
+    <TouchableOpacity onPress={onPress} activeOpacity={disabled ? 1 : 0.7}>
+      <View
+        style={StyleSheet.flatten([styles.button, disabled && styles.fade])}
+      >
         <Text style={[styles.buttonText, disabled && styles.fadeText]}>
           {text}
         </Text>

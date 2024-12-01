@@ -5,7 +5,7 @@ import moment from "moment";
 import { RootStackParamList } from "../../../navigation/RootNavigator";
 
 type ExpensesItemProp = {
-  date?: any;
+  date: string;
   id: string;
 };
 

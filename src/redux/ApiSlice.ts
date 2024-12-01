@@ -4,15 +4,16 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 interface CreateExpenseItemRequest {
   description: string;
   amount: number;
-  date: Date;
+  date: string;
 }
 
 // Define the shape of the response data
 interface CreateExpenseItemResponse {
+  name: string | undefined;
   id: string;
   description: string;
   amount: number;
-  date: Date;
+  date: string;
 }
 
 interface GetExpenseItemResponse extends CreateExpenseItemResponse {
